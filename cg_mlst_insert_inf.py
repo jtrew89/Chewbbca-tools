@@ -11,23 +11,36 @@ alleles
 from Bio import SeqIO
 import os
 import argparse
+import pandas as pd
 
-##Open novel_alleles.fasta
-##load fasta sequence (AlignIO.parse returns a MSA as an interator, to get
-#access to seperate sequences it has to be saved into a list)
+##Create arguments
+parser = argparse.ArgumentParser(description='Script written to take the novel_alleles.fasta output file from chewBBACA and insert each novel allele into their respective schema with a "inf_" mark. So that novel alleles are maked in the schema, as chewBBACA currently doesnt mark novel alleles.')
+parser.add_argument(
+		'-id', '--input_directory',
+		dest='in_dir',
+		help='Directory where novel_alleles.fasta and novel alleles.csv are kept',
+		required=True
+		)
 
+parser.add_argument(
+		'-sd', '--schema_directtory',
+		dest='schm_dir',
+		help='Directory where 3002 loci fasta files are kept',
+		required=True
+		)
+args = parser.parse_args()
 
 ##Some code found online that I should be able to change into what I want
-fasta_file = args.in_fas  # Input fasta file
-id_file =  args.in_id # Input novel allele ID
-loci_dir = args.schem_dir # Output fasta file which allele is sent to
+fasta_file = args.in_dir+'novel_alleles.fasta'  # Input fasta file
+id_file =  args.in_dir+'novel_alleles.csv' # Input novel allele ID
+loci_dir = args.schm_dir # Output fasta file which allele is sent to
 
 id_df = pd.read_csv(id_file)
 id_df['fas_id'] = id_df.Locus + '_' + id_df['Novel Allele'].apply(str)
 wanted = sorted(set(id_df['fas_id']))
 
 #fasta_sequences = SeqIO.parse(open(fasta_file),'fasta')  #if I want to iterate through fasta sequences at a later date
-fasta_dict = SeqIO.index('novel_alleles.fasta', 'fasta') #Create a dictionary out of the fasta so that is can be indexed for a particular sequence
+fasta_dict = SeqIO.index(args.in_dir+'novel_alleles.fasta', 'fasta') #Create a dictionary out of the fasta so that is can be indexed for a particular sequence
 
 end = False
 for alle in wanted:
@@ -35,4 +48,4 @@ for alle in wanted:
 	with open(loci_dir+fas_out+'.fasta', "a") as f:
 		curr_seq = fasta_dict[alle]
 		curr_seq.id = fas_out + '_inf_' + curr_seq.id[curr_seq.id.rindex('_')+1:]
-		SeqIO.write([curr_seq], f, "fasta")
+		SeqIO.write(curr_seq, f, "fasta")

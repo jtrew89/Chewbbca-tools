@@ -5,11 +5,14 @@ import pandas as pd
 import os
 import argparse
 import time
+import re
 
 def main(args):
 	##Variables used in script
 	date = time.strftime('%Y%m%d')
 	in_file = args.in_dir+'results_alleles.tsv'
+	db_file = os.path.basename(args.str_db)
+	db_dir = re.sub(db_file,'',args.str_db) #get db dir from path to db by removing input db name from path
 
 	##Load database and allele profile to be added
 	in_alle = pd.read_table(in_file)
@@ -34,12 +37,6 @@ if __name__ == '__main__':
 		'-sdb','--strain_db',
 		dest='str_db',
 		help="Strain db to update and path to",
-		required=True
-			)
-	parser.add_argument(
-		'-dbd','--db_dir',
-		dest='db_dir',
-		help="Directory with strain db",
 		required=True
 			)
 

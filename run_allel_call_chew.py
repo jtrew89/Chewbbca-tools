@@ -11,6 +11,7 @@ import argparse
 import cg_mlst_INF_list as inf_lst
 import cg_mlst_insert_inf as ins_inf
 import cg_mlst_get_st as get_st
+import cg_mlst_add_db as up_db
 import subprocess
 import os
 import time
@@ -23,7 +24,8 @@ parser.add_argument('-t', '--train', dest='train', help='Training file to be use
 parser.add_argument('-od', '--output_directory', dest='out_dir', help='Path to output directory', required=True)
 parser.add_argument('-c', '--cpus', dest='cpus', help='CPUs to use in allele call', required=False, type=int)
 parser.add_argument('-dd', '--db_dir', dest='db_dir', help='Directory to output update db', required=True)
-parser.add_argument('-db', '--profiles_db', dest='db', help='Path to profiles.list (whichever version) and file name')
+parser.add_argument('-db', '--profiles_db', dest='db', help='Path to profiles.list (whichever version) and file name', require=True)
+parser.add_argument('-sdb','--strain_db',dest='str_db',help="Strain db to update and path to",required=True)
 
 args = parser.parse_args()
 
@@ -42,6 +44,13 @@ with open(f'{args.dir}+{date}+.log', 'w') as log_file:
 		stdout=log_file
 			)
 
+##Update serovar database with new allele profiles
+update_db_dic = {
+	'in_dir':args.out_dir,
+	'str_db':args.str_db
+		}
+up_db.main(update_db_dic)
+
 ##Get list of novel alleles
 novel_alle_dic = {
 	'in_dir':args.out_dir,
@@ -49,7 +58,7 @@ novel_alle_dic = {
 		}
 inf_lst.main(novel_alle_dic)
 
-##Update alleles schema fasta files with new alleles marker with inf
+##Update alleles schema fasta files with new alleles marked with inf
 ins_alle_dic = {
 	'in_dir':args.out_dir,
 	'schm_dir':args.sch_dir

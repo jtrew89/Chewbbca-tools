@@ -9,21 +9,22 @@ import pandas as pd
 import argparse
 import time
 import re
+import sys
 pd.options.mode.chained_assignment = None  # default='warn'
 
 ##script in function so that it can be used as a module in the main run_snippy.py
 def main(args):
 
 	##Load dfs used in script
-	if str(args.in_query).endswith('.csv'):
-		query_df = pd.read_csv(args.in_query, low_memory=False)
+	if str(args['in_query']).endswith('.csv'):
+		query_df = pd.read_csv(args['in_query'], low_memory=False)
 	else:
-		query_df = pd.read_table(args.in_query, low_memory=False)
+		query_df = pd.read_table(args['in_query'], low_memory=False)
 	query_df.set_index('FILE', inplace=True) ##Set isolate id as index so that loopin can be used on index
-	if str(args.db).endswith('.csv'):
-		profiles_df = pd.read_csv(args.db, low_memory=False)
+	if str(args['db']).endswith('.csv'):
+		profiles_df = pd.read_csv(args['db'], low_memory=False)
 	else:
-		profiles_df = pd.read_table(args.db, low_memory=False)
+		profiles_df = pd.read_table(args['db'], low_memory=False)
 
 	##Variables used in script
 	isolate_id = list(query_df.index)
@@ -70,16 +71,16 @@ def main(args):
 
 	##Make table of isolates and their STs (nevel or not)
 	run_novel_sts_out = pd.DataFrame({'Isolate_ID':novel_isolates,'ST':novel_sts})
-	run_novel_sts_out.to_csv(args.out_dir+'run_novel_sts_out.csv',index=False)
+	run_novel_sts_out.to_csv(args['out_dir']+'run_novel_sts_out.csv',index=False)
 	if not sts_results:
 		print('All isolates had novel STs')
 	else:
 		run_ident_sts_out = pd.DataFrame({'Isolate_ID':isolate_results,'ST':sts_results})
-		run_ident_sts_out.to_csv(args.out_dir+'run_ident_sts_out.csv',index=False)
+		run_ident_sts_out.to_csv(args['out_dir']+'run_ident_sts_out.csv',index=False)
 
 	##Save new reference db
-	timestr = time.strftime("%d%m%Y-%H%M")
-	profiles_df.to_csv(f'{args.db_dir}profiles.list.{timestr}.csv',index=False)
+	timestr = time.strftime("%d_%m_%Y-%H_%M")
+	profiles_df.to_csv(f"{args['db_dir']}profiles.list.{timestr}.csv",index=False)
 
 if __name__ == '__main__':
 	##Create arguments

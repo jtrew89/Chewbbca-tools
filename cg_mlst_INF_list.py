@@ -12,7 +12,7 @@ import re
 ##Make whole script into function so that the script can be imported by another script
 def main(args):
 	##Load allele profiles
-	al_prof_df = pd.read_table(f'{args.in_dir}results_alleles.tsv')
+	al_prof_df = pd.read_table(f"{args['in_dir']}results_alleles.tsv")
 
 	##Creat Variables used in script
 	loci = al_prof_df.columns.tolist()
@@ -37,7 +37,7 @@ def main(args):
 	inf_df['Novel Allele'] = inf_alle
 
 	##Output INF values
-	inf_df.to_csv(f'{args.out_dir}novel_alleles.csv', index=False)
+	inf_df.to_csv(f"{args['out_dir']}novel_alleles.csv", index=False)
 
 	"""
 	INF-'novel allele' is only statted once, any other isolates that
@@ -62,7 +62,7 @@ def main(args):
 			form_results[curr_loci.name] =   curr_loci
 
 	##Output results_alleles with all novel alleles marked
-	form_results.to_csv(f'{args.out_dir}results_alleles_form.csv', index=False)
+	form_results.to_csv(f"{args['out_dir']}results_alleles_form.csv", index=False)
 
 if __name__=='__main__':
 	##Create arguments

@@ -17,16 +17,16 @@ import pandas as pd
 def main(args):
 
 	##Some code found online that I should be able to change into what I want
-	fasta_file = args.in_dir+'novel_alleles.fasta'  # Input fasta file
-	id_file =  args.in_dir+'novel_alleles.csv' # Input novel allele ID
-	loci_dir = args.schm_dir # Output fasta file which allele is sent to
+	fasta_file = args['in_dir']+'novel_alleles.fasta'  # Input fasta file
+	id_file =  args['in_dir']+'novel_alleles.csv' # Input novel allele ID
+	loci_dir = args['schm_dir'] # Output fasta file which allele is sent to
 
 	id_df = pd.read_csv(id_file)
 	id_df['fas_id'] = id_df.Locus + '_' + id_df['Novel Allele'].apply(str)
 	wanted = sorted(set(id_df['fas_id']))
 
 	#fasta_sequences = SeqIO.parse(open(fasta_file),'fasta')  #if I want to iterate through fasta sequences at a later date
-	fasta_dict = SeqIO.index(args.in_dir+'novel_alleles.fasta', 'fasta') #Create a dictionary out of the fasta so that is can be indexed for a particular sequence
+	fasta_dict = SeqIO.index(args['in_dir']+'novel_alleles.fasta', 'fasta') #Create a dictionary out of the fasta so that is can be indexed for a particular sequence
 
 	end = False
 	for alle in wanted:

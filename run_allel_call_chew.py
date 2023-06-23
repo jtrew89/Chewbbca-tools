@@ -24,7 +24,7 @@ parser.add_argument('-t', '--train', dest='train', help='Training file to be use
 parser.add_argument('-od', '--output_directory', dest='out_dir', help='Path to output directory', required=True)
 parser.add_argument('-c', '--cpus', dest='cpus', help='CPUs to use in allele call', required=False, type=int)
 parser.add_argument('-dd', '--db_dir', dest='db_dir', help='Directory to output update db', required=True)
-parser.add_argument('-db', '--profiles_db', dest='db', help='Path to profiles.list (whichever version) and file name', require=True)
+parser.add_argument('-db', '--profiles_db', dest='db', help='Path to profiles.list (whichever version) and file name', required=True)
 parser.add_argument('-sdb','--strain_db',dest='str_db',help="Strain db to update and path to",required=True)
 
 args = parser.parse_args()

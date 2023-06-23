@@ -6,23 +6,24 @@ import os
 import argparse
 import time
 import re
+import sys
 
 def main(args):
 	##Variables used in script
-	date = time.strftime('%Y%m%d')
-	in_file = args.in_dir+'results_alleles.tsv'
-	db_file = os.path.basename(args.str_db)
-	db_dir = re.sub(db_file,'',args.str_db) #get db dir from path to db by removing input db name from path
+	date = time.strftime('%d_%m_%Y')
+	in_file = args['in_dir']+'results_alleles.tsv'
+	db_file = os.path.basename(args['str_db'])
+	db_dir = re.sub(db_file,'',args['str_db']) #get db dir from path to db by removing input db name from path
 
 	##Load database and allele profile to be added
-	in_alle = pd.read_table(in_file)
-	db_alle = pd.read_csv(args.str_db)
+	in_alle = pd.read_table(in_file, low_memory=False)
+	db_alle = pd.read_csv(args['str_db'], low_memory=False)
 
 	##Concat allele profiles for new db
 	new_db = pd.concat([in_alle,db_alle],ignore_index=True)
 
 	##Save new db
-	new_db.to_csv(db_dir+'curr_db_'+date+'csv')
+	new_db.to_csv(db_dir+'curr_db_'+date+'.csv')
 
 if __name__ == '__main__':
 	##Create arguments
